@@ -1,0 +1,96 @@
+<html>
+<head>
+    <title>Twitch OAuth Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectre.css/0.5.8/spectre.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+    <style type="text/css">
+        .borderless-input {
+            border: none;
+            background: transparent;
+            width: 100px;
+        }
+        .settings-panel {
+            align-content: center;
+            width: 454px;
+            height: 400px;
+        }
+        .main {
+            margin-top: 10px;
+            margin-left: 7px;
+            margin-right: 7px;
+        }
+        .btn {
+            margin-top: .4rem;
+            margin-right: .4rem;
+            margin-left: .4rem;
+            background: hsl(217 16% 22% / 1);
+        }
+        #scopes-label {
+            margin-top: .6rem;
+            margin-right: .4rem;
+            margin-left: .4rem;
+        }
+        #get-oauth-div {
+            margin-top: 20%;
+        }
+        .panel {
+            border: .05rem solid hsl(216 16% 38% / 1);
+        }
+        .btn:focus, .btn:hover {
+            background: #303742;
+            border-color: hsl(241 63% 69% / 1);
+            color: hsl(241 63% 69% / 1);
+        }
+    </style>
+</head>
+<body class="bg-dark">
+
+    <div class="container main flex-centered">
+        <form id="settings-form" class="form-horizontal form-group" method="post" action="submit">
+            <div class="columns">
+                <div class="column col-auto centered">
+                    <div class="panel settings-panel">
+                        <div class="panel-body">
+                            <label class="form-label">Twitch OAuth Generator</label>
+                            <div class="oauth_input">
+                                <input id="twitch_oauth" name="twitch_oauthtoken" class="form-input my-2" type="text" disabled placeholder="Select some scopes first">
+                            </div>
+
+                            <label id="scopes-label" class="form-label">OAuth Scopes</label>
+                            <div id="scope-buttons" class="flex-centered">
+                            <button id="default-scopes" type="button" onclick="setDefaultScopes()" class="btn btn-sm" aria-label="Close" role="button">Set Default Scopes</button>
+                            <button id="extended-scopes" type="button" onclick="setExtendedScopes()" class="btn btn-sm" aria-label="Close" role="button">Default plus channel:read:redemptions</button>
+                            </div>
+                            <div id="get-oauth-div" class="flex-centered">
+                                <button disabled id="get-oauth-button" onclick="getToken()" type="button" class="btn" aria-label="Close" role="button">Get OAuth Token</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <script>
+        var baseUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=syax9924o3pkgt7d3lnimeau6pimhf&redirect_uri=https://sarayalth.github.io/TwitchOAuthGenerator/&scope="
+        var baseScopes = "chat:read+chat:edit+channel:moderate+whispers:read+whispers:edit+channel_editor"
+        var channelPointsScope = "+channel:read:redemptions"
+        let twitch_oauth = document.getElementById("twitch_oauth")
+        let oauth_button = document.getElementById("get-oauth-button")
+
+        function setDefaultScopes() {
+            twitch_oauth.value = baseUrl + baseScopes
+            oauth_button.disabled = false
+        }
+        function setExtendedScopes() {
+            twitch_oauth.value = baseUrl + baseScopes + channelPointsScope
+            oauth_button.disabled = false
+        }
+        function getToken() {
+            document.location.href = twitch_oauth.value
+        }
+    </script>
+
+</body>
+</html>

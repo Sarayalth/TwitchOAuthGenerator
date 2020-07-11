@@ -43,7 +43,7 @@
         }
     </style>
 </head>
-<body class="bg-dark">
+<body class="bg-dark" onload="checkUrl()">
 
     <div class="container main flex-centered">
         <form id="settings-form" class="form-horizontal form-group" method="post" action="submit">
@@ -56,13 +56,19 @@
                                 <input id="twitch_oauth" name="twitch_oauthtoken" class="form-input my-2" type="text" disabled placeholder="Select some scopes first">
                             </div>
 
-                            <label id="scopes-label" class="form-label">OAuth Scopes</label>
-                            <div id="scope-buttons" class="flex-centered">
-                            <button id="default-scopes" type="button" onclick="setDefaultScopes()" class="btn btn-sm" aria-label="Close" role="button">Set Default Scopes</button>
-                            <button id="extended-scopes" type="button" onclick="setExtendedScopes()" class="btn btn-sm" aria-label="Close" role="button">Default plus channel:read:redemptions</button>
+                            <div id="token-div" style="display: none">
+                                <label class="form-label">Here's your OAuth token</label>
                             </div>
-                            <div id="get-oauth-div" class="flex-centered">
-                                <button disabled id="get-oauth-button" onclick="getToken()" type="button" class="btn" aria-label="Close" role="button">Get OAuth Token</button>
+                            
+                            <div id="scopes-div">
+                                <label id="scopes-label" class="form-label">OAuth Scopes</label>
+                                <div id="scope-buttons" class="flex-centered">
+                                    <button id="default-scopes" type="button" onclick="setDefaultScopes()" class="btn btn-sm" aria-label="Close" role="button">Set Default Scopes</button>
+                                    <button id="extended-scopes" type="button" onclick="setExtendedScopes()" class="btn btn-sm" aria-label="Close" role="button">Default plus channel:read:redemptions</button>
+                                </div>
+                                <div id="get-oauth-div" class="flex-centered">
+                                    <button disabled id="get-oauth-button" onclick="getToken()" type="button" class="btn" aria-label="Close" role="button">Get OAuth Token</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -78,6 +84,17 @@
         var channelPointsScope = "+channel:read:redemptions"
         let twitch_oauth = document.getElementById("twitch_oauth")
         let oauth_button = document.getElementById("get-oauth-button")
+
+        var oauthHash = location.hash.substr(1);
+        var accessToken = oauthHash.substr(oauthHash.indexOf('access_token=')).split('&')[0].split('=')[1];
+
+        function checkUrl() {
+            if (accessToken) {
+                document.getElementById("scopes-div").style.display = "none"
+                document.getElementById("token-div").style.display = "block"
+                twitch_oauth.value = "oauth:" + accessToken
+            }
+        }
 
         function setDefaultScopes() {
             twitch_oauth.value = baseUrl + baseScopes
